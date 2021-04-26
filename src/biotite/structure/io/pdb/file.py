@@ -34,9 +34,19 @@ _atom_records = {"hetero"    : (0,  6),
                  "element"   : (76, 78),
                  "charge"    : (78, 80),}
 
-def _fix_atom_name(atom_name):
-    if len(atom_name) == 3: return ' '+atom_name
-    return atom_name
+def _fix_atom_name(array_atom_name, array_element):
+    if len(array_atom_name) != len(array_element)
+        return array_atom_name
+    else
+        res = []
+        for i in range(len(array_atom_name)):
+            if len(array_atom_name[i]) == 4:
+                res.append(array_atom_name[i])
+            elif len(array_element[i]) == 2:
+                res.append(array_atom_name[i])
+            else
+                res.append(" "+array_atom_name[i])
+    return res
 
 class PDBFile(TextFile):
     r"""
@@ -539,7 +549,7 @@ class PDBFile(TextFile):
             pdb_res_id = ["{:>4d}".format(i) for i in pdb_res_id]
 
         # correct atom name placement
-        atom_name = [_fix_atom_name(n) for n in array.atom_name]
+        atom_name = _fix_atom_name(array.atom_name, array.element)
 
         if isinstance(array, AtomArray):
             self.lines = [None] * array.array_length()
