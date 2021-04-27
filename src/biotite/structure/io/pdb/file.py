@@ -557,7 +557,7 @@ class PDBFile(TextFile):
                 self.lines[i] = ("{:6}".format(hetero[i]) + 
                                   pdb_atom_id[i] +
                                   " " +
-                                  "{:^4}".format(atom_name[i]) +
+                                  "{:<4}".format(atom_name[i]) +
                                   " " +
                                   "{:3}".format(array.res_name[i]) +
                                   " " +
@@ -571,7 +571,7 @@ class PDBFile(TextFile):
                                   "{:>6.2f}".format(occupancy[i]) +
                                   "{:>6.2f}".format(b_factor[i]) +
                                   (" " * 10) + 
-                                  "{:2}".format(array.element[i]) +
+                                  "{:>2}".format(array.element[i]) +
                                   "{:2}".format(charge[i])
                                  )
         
@@ -587,7 +587,7 @@ class PDBFile(TextFile):
                 templines[i] = ("{:6}".format(hetero[i]) + 
                                  pdb_atom_id[i] +
                                  " " +
-                                 "{:^4}".format(atom_name[i]) +
+                                 "{:<4}".format(atom_name[i]) +
                                  " " +
                                  "{:3}".format(array.res_name[i]) +
                                  " " +
@@ -598,7 +598,7 @@ class PDBFile(TextFile):
                                  "{:>6.2f}".format(occupancy[i]) +
                                  "{:>6.3f}".format(b_factor[i]) +
                                  (" " * 10) +
-                                 "{:2}".format(array.element[i]) +
+                                 "{:>2}".format(array.element[i]) +
                                  "{:2}".format(charge[i])
                                 )
             for i in range(array.stack_depth()):
