@@ -44,7 +44,7 @@ def _fix_atom_name(array_atom_name, array_element):
                 res.append(array_atom_name[i])
             elif len(array_element[i]) == 2:
                 res.append(array_atom_name[i])
-            else
+            else:
                 res.append(" "+array_atom_name[i])
     return res
 
