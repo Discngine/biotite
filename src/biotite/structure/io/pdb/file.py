@@ -35,7 +35,7 @@ _atom_records = {"hetero"    : (0,  6),
                  "charge"    : (78, 80),}
 
 def _fix_atom_name(array_atom_name, array_element):
-    if len(array_atom_name) != len(array_element)
+    if len(array_atom_name) != len(array_element):
         return array_atom_name
     else
         res = []
