@@ -256,7 +256,7 @@ def _fill_annotations(array, model_dict, extra_fields, use_author_fields):
         array.set_annotation(
             "res_id", np.array(
                 [-1 if e in [".","?"] else int(e)
-                for e in model_dict["label_seq_id"]]
+                for e in model_dict[f"{prefix}_seq_id"]]
             )
         )
     else:
