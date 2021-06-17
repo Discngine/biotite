@@ -238,7 +238,7 @@ def get_structure(pdbx_file, model=None, data_block=None, altloc="first",
 
 def _fill_annotations(array, model_dict, extra_fields, use_author_fields):
     prefix = "auth" if use_author_fields else "label"
-    if f"{prefix}_asym_id" in model_dict.keys:
+    if f"{prefix}_asym_id" in model_dict.keys():
         array.set_annotation(
             "chain_id", model_dict[f"{prefix}_asym_id"].astype("U4")
         )
@@ -252,7 +252,7 @@ def _fill_annotations(array, model_dict, extra_fields, use_author_fields):
                 "chain_id", model_dict["auth_asym_id"].astype("U4")
             )
 
-    if f"{prefix}_seq_id" in model_dict.keys:
+    if f"{prefix}_seq_id" in model_dict.keys():
         array.set_annotation(
             "res_id", np.array(
                 [-1 if e in [".","?"] else int(e)
@@ -282,7 +282,7 @@ def _fill_annotations(array, model_dict, extra_fields, use_author_fields):
         )
     )
 
-    if f"{prefix}_comp_id" in model_dict.keys:
+    if f"{prefix}_comp_id" in model_dict.keys():
         array.set_annotation(
             "res_name", model_dict[f"{prefix}_comp_id"].astype("U3")
         )
@@ -300,7 +300,7 @@ def _fill_annotations(array, model_dict, extra_fields, use_author_fields):
         "hetero", (model_dict["group_PDB"] == "HETATM")
     )
 
-    if f"{prefix}_atom_id" in model_dict.keys:
+    if f"{prefix}_atom_id" in model_dict.keys():
         array.set_annotation(
             "atom_name", model_dict[f"{prefix}_atom_id"].astype("U6")
         )
