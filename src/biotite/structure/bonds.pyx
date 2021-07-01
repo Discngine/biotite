@@ -1338,12 +1338,13 @@ def connect_via_distances(atoms, dict distance_range=None):
     Create a :class:`BondList` for a given atom array, based on
     pairwise atom distances.
 
-    A :attr:`BondType.ANY`, bond is created for two atoms within the
+    A :attr:`BondType.SINGLE`, bond is created for two atoms within the
     same residue, if the distance between them is within the expected 
     bond distance range.
     Bonds between two adjacent residues are created for the atoms
     expected to connect these residues, i.e. ``'C'`` and ``'N'`` for
-    peptides and ``"O3'"`` and ``'P'`` for nucleotides.
+    peptides and ``"O3'"`` and ``'P'`` for nucleotides. Those are 
+    approptiately typed.
     
     Parameters
     ----------
@@ -1451,16 +1452,17 @@ def connect_via_distances(atoms, dict distance_range=None):
                     bonds.append((
                         curr_start_i + atom_index1,
                         curr_start_i + atom_index2,
-                        BondType.ANY
+                        BondType.SINGLE
                     ))
 
     bond_list = BondList(atoms.array_length(), np.array(bonds))
     
     inter_bonds = _connect_inter_residue(atoms, residue_starts)
-    # As all bonds should be of type ANY, convert also inter-residue
-    # bonds to ANY by creating a new BondList and omitting the BonType
-    # column
-    inter_bonds = BondList(atoms.array_length(), inter_bonds.as_array()[:, :2])
+    # If all bonds should be of type SINGLE, uncomment the following 
+    # line to convert also inter-residue bonds to SINGLE
+    # by creating a new BondList
+
+    # inter_bonds = BondList(atoms.array_length(), inter_bonds.as_array()[:, :2], BondType.SINGLE)
     
     return bond_list.merge(inter_bonds)
 
