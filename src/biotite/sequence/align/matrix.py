@@ -54,14 +54,15 @@ class SubstitutionMatrix(object):
             - **GONNET** - Not usable with default protein alphabet
             - **DAYHOFF**
         
-        - Corrected protein substitution matrices [1]_, <BLOCKS>
-          is the BLOCKS version, the matrix is based on
+        - Corrected protein substitution matrices :footcite:`Hess2016`,
+          **<BLOCKS>** is the BLOCKS version, the matrix is based on
             
             - **BLOSUM<n>_<BLOCKS>**
             - **RBLOSUM<n>_<BLOCKS>**
             - **CorBLOSUM<n>_<BLOCKS>**
     
-    A list of all available matrix names is returned by `list_db()`.
+    A list of all available matrix names is returned by
+    :meth:`list_db()`.
     
     Since this class can handle two different alphabets, it is possible
     to align two different types of sequences.
@@ -83,6 +84,11 @@ class SubstitutionMatrix(object):
     ------
     KeyError
         If the matrix dictionary misses a symbol given in the alphabet.
+    
+    References
+    ----------
+    
+    .. footbibliography::
     
     Examples
     --------
@@ -118,14 +124,6 @@ class SubstitutionMatrix(object):
         
     >>> alph = ProteinSequence.alphabet
     >>> matrix = SubstitutionMatrix(alph, alph, "BLOSUM50")
-    
-    References
-    ----------
-    
-    .. [1] M Hess, F Keul, M Goesele and K Hamacher,
-       "Addressing inaccuracies in BLOSUM computation improves homology
-       search performance."
-       BMC Bioinformatics, 17 (2016).
     """
     
     # Directory of matrix files

@@ -59,7 +59,7 @@ def align_banded(seq1, seq2, matrix, band, gap_penalty=-10, local=False,
                  max_number=1000)
 
     Perform a local or semi-global alignment within a defined diagonal
-    band. [1]_
+    band. :footcite:`Pearson1988`
 
     The function requires two diagonals that defines the lower
     and upper limit of the alignment band.
@@ -125,11 +125,11 @@ def align_banded(seq1, seq2, matrix, band, gap_penalty=-10, local=False,
     than the first sequence, even if inserting additional gaps would
     yield a more optimal alignment.
     Considerations on how to find a suitable band width are discussed in
-    [2]_.
+    :footcite:`Gibrat2018`.
     
     The restriction to a limited band is the central difference between
     the banded alignment heuristic and the optimal alignment
-    algorithms [3]_ [4]_.
+    algorithms :footcite:`Needleman1970, Smith1981`.
     Those classical algorithms require :math:`O(m \cdot n)`
     memory space and computation time for aligning two sequences with
     lengths :math:`m` and :math:`n`, respectively.
@@ -160,6 +160,8 @@ def align_banded(seq1, seq2, matrix, band, gap_penalty=-10, local=False,
     x x x
     x x x
     x x x
+    x x x
+    x x x
     = = =
 
     Filled cells, i.e. cells within the band, are indicated by ``x``.
@@ -169,19 +171,7 @@ def align_banded(seq1, seq2, matrix, band, gap_penalty=-10, local=False,
     References
     ----------
     
-    .. [1] WR Pearson, DJ Lipman,
-       "Improved tools for biological sequence comparison."
-       Proc Natl Acad Sci USA, 85, 2444–2448 (1988).
-    .. [2] JF Gibrat,
-       "A short note on dynamic programming in a band."
-       BMC Bioinformatics, 19 (2018).
-    .. [3] SB Needleman, CD Wunsch,
-       "A general method applicable to the search for similarities
-       in the amino acid sequence of two proteins."
-       J Mol Biol, 48, 443-453 (1970).
-    .. [4] TF Smith, MS Waterman,
-       "Identification of common molecular subsequences."
-       J Mol Biol, 147, 195-197 (1981).
+    .. footbibliography::
     
     Examples
     --------
@@ -344,22 +334,14 @@ def align_banded(seq1, seq2, matrix, band, gap_penalty=-10, local=False,
         # Multiple starting points possible,
         # when duplicates of maximum score exist
         if affine_penalty:
-            max_score = np.max([m_table, g1_table, g2_table])
-            # Start indices in m_table
-            i_list_new, j_list_new = np.where((m_table == max_score))
-            i_list = np.append(i_list, i_list_new)
-            j_list = np.append(j_list, j_list_new)
-            state_list = np.append(state_list, np.full(len(i_list_new), 1))
-            # Start indices in g1_table
-            i_list_new, j_list_new = np.where((g1_table == max_score))
-            i_list = np.append(i_list, i_list_new)
-            j_list = np.append(j_list, j_list_new)
-            state_list = np.append(state_list, np.full(len(i_list_new), 2))
-            # Start indices in g2_table
-            i_list_new, j_list_new = np.where((g2_table == max_score))
-            i_list = np.append(i_list, i_list_new)
-            j_list = np.append(j_list, j_list_new)
-            state_list = np.append(state_list, np.full(len(i_list_new), 3))
+            # The maximum score in the gap score tables do not need to
+            # be considered, as these starting positions would indicate
+            # that the local alignment starts with a gap
+            # Hence the maximum score value in these tables is always
+            # less than in the match table
+            max_score = np.max(m_table)
+            i_list, j_list = np.where((m_table == max_score))
+            state_list = np.append(state_list, np.full(len(i_list), 1))
         else:
             max_score = np.max(score_table)
             i_list, j_list = np.where((score_table == max_score))
