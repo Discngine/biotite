@@ -4,10 +4,11 @@ on: [workflow_dispatch]
 jobs:
   build_wheels:
     name: build_wheels
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         python: [38, 39]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout branch "dng_fixes"
         uses: actions/checkout@v2
@@ -39,7 +40,7 @@ jobs:
 
   release:
     needs: [build_wheels]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v2
