@@ -6,7 +6,8 @@ jobs:
     name: Wheels on ${{ matrix.os }} python ${{ matrix.python }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         python: [38, 39]
     runs-on: ${{ matrix.os }}
     steps:
@@ -62,3 +63,12 @@ jobs:
           body: |
             Automatically built wheels for the `dng_fixes` branch.
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to pip.discngine.cloud
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://pip.discngine.cloud/
+          user: ${{ secrets.DNG_PYPI_USERNAME }}
+          password: ${{ secrets.DNG_PYPI_PASSWORD }}
+          packages_dir: dist/
+          verbose: true
