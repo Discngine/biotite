@@ -1,0 +1,79 @@
+---
+name: Create discngine wheels
+on: [workflow_dispatch]
+jobs:
+  build_wheels:
+    name: Wheels on ${{ matrix.os }} python ${{ matrix.python }}
+    strategy:
+      matrix:
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
+        # os: [macos-latest]
+        python: [39]
+        # python: [38, 39]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout branch "dng_fixes"
+        uses: actions/checkout@v2
+        with:
+          # fetch-depth: 0
+          ref: dng_fixes
+
+      - uses: actions/setup-python@v2
+
+      - name: install openblas if macos
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          brew install openblas
+
+      - name: Install pip packages
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "wheel>=0.30"
+          python -m pip install "setuptools>=0.30"
+          OPENBLAS="$(brew --prefix openblas)" python -m pip install "numpy>=1.21.2"
+          python -m pip install "cython>=0.29"
+
+      - name: Build wheel
+        uses: pypa/cibuildwheel@v2.3.0
+        env:
+          OPENBLAS: $(brew --prefix openblas)
+          CIBW_BUILD: cp${{ matrix.python }}-*
+          CIBW_SKIP: "*_i686"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: wheelhouse/*.whl
+          if-no-files-found: error
+  release:
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Get current date for tag
+        id: date
+        # run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "::set-output name=date::$(date +'%s')"
+      - name: Release
+        uses: ncipollo/release-action@v1
+        # prerelease: true
+        with:
+          tag: ${{ steps.date.outputs.date }}
+          artifacts: "dist/*.whl"
+          body: |
+            Automatically built wheels for the `dng_fixes` branch.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to azure_devops
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://dev.azure.com/discnginesas/Discngine%20Cloud/_artifacts/feed/3decision
+          user: ${{ secrets.DNG_AZUREPYPI_USERNAME }}
+          password: ${{ secrets.DNG_AZUREPYPI_PASSWORD }}
+          packages_dir: dist/
+          verbose: true
